@@ -9,21 +9,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import server.models.Course;
+import server.models.RegistrationForm;
 
 public class Server {
 
     public final static String REGISTER_COMMAND = "INSCRIRE";
     public final static String LOAD_COMMAND = "CHARGER";
+    public final static String TAB = "\t";
     private final ServerSocket server;
     private Socket client;
     private ObjectInputStream objectInputStream;
     private ObjectOutputStream objectOutputStream;
     private final ArrayList<EventHandler> handlers;
+    private ArrayList<Course> courses;
 
     public Server(int port) throws IOException {
         this.server = new ServerSocket(port, 1);
         this.handlers = new ArrayList<EventHandler>();
         this.addEventHandler(this::handleEvents);
+        this.courses = new ArrayList<>();
     }
 
     public void addEventHandler(EventHandler h) {
@@ -91,11 +95,8 @@ public class Server {
      @param arg la session pour laquelle on veut récupérer la liste des cours
      */
     public void handleLoadCourses(String arg) {
-
-        ArrayList<Course> courses = new ArrayList<>();
-
         try{
-            BufferedReader reader = new BufferedReader(new FileReader("../data/cours.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("./data/cours.txt"));
             String line = reader.readLine();
 
             while (line != null) {
@@ -114,9 +115,11 @@ public class Server {
                     courses.add(newCourse);
                 }
             }
+
+            objectOutputStream.writeObject(courses);
             reader.close();
-        }catch (IOException e){
-            System.out.println("Could not open file");
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -126,7 +129,41 @@ public class Server {
      La méthode gére les exceptions si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-        // TODO: implémenter cette méthode
+
+        try {
+            RegistrationForm rf = (RegistrationForm) objectInputStream.readObject();
+            Course course = rf.getCourse();
+
+            String courseCode = course.getCode();
+            String firstName = rf.getPrenom();
+            boolean validCourse = false;
+
+            for (Course c: courses) {
+            if (c.equals(course)){
+                    validCourse = true;
+                }
+            }
+
+            if (validCourse) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter("./data/inscription.txt"));
+
+                String s = course.getSession() + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName +
+                        TAB + rf.getNom() + TAB + rf.getEmail();;
+
+                writer.append(s);
+                writer.close();
+
+                String success = "Félicitations! Inscription réussie de " + firstName + " au cours " +
+                        courseCode + ".";
+                objectOutputStream.writeObject(success);
+            }
+            else {
+                String failure = "Échec! Inscription échoué de " + firstName + " au cours " +
+                        courseCode + ".";
+                objectOutputStream.writeObject(failure);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
-
