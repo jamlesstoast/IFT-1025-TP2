@@ -96,24 +96,21 @@ public class Server {
      */
     public void handleLoadCourses(String arg) {
         try{
-            BufferedReader reader = new BufferedReader(new FileReader("./data/cours.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader("src/main/java/server/data/cours.txt"));
             String line = reader.readLine();
-
             while (line != null) {
                 String[] course = line.split("\t");
-
-                System.out.println(course);
                 /* course[0] == course code
                    course[1] == course name
                    course[2] == semester
                  */
 
-                if (course[2] == arg){
-                    System.out.println("Added: " + line); // print debugger
-
-                    Course newCourse = new Course(course[0], course[1], course[2]);
-                    courses.add(newCourse);
+                if ( course[2].equals(arg) ){
+                    Course selectedCourse = new Course(course[0], course[1], course[2]);
+                    courses.add(selectedCourse);
                 }
+
+                line = reader.readLine();
             }
 
             objectOutputStream.writeObject(courses);
