@@ -135,8 +135,6 @@ public class Server {
             RegistrationForm rf = (RegistrationForm) objectInputStream.readObject();
             Course course = rf.getCourse();
 
-            System.out.println(rf);
-
             String courseCode = course.getCode();
             String firstName = rf.getPrenom();
             boolean validCourse = false;

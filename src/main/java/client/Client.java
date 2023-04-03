@@ -116,7 +116,6 @@ public class Client {
         Course course = new Course(null, code, semester);
 
         RegistrationForm inscriptionForm = new RegistrationForm(prenom, nom, email, matricule, course);
-        System.out.println(inscriptionForm);
 
         return inscriptionForm;
     }
