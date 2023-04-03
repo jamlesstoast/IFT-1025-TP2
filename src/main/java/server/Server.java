@@ -147,14 +147,12 @@ public class Server {
             }
 
             if (validCourse) {
-                BufferedWriter writer =
-                        new BufferedWriter(new FileWriter("src/main/java/server/data/inscription.txt"));
+                FileWriter fw = new FileWriter("src/main/java/server/data/inscription.txt", true);
 
-                String s = course.getSession() + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName +
-                        TAB + rf.getNom() + TAB + rf.getEmail();
+                fw.write(course.getSession() + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName +
+                        TAB + rf.getNom() + TAB + rf.getEmail());
 
-                writer.append(s);
-                writer.close();
+                fw.close();
 
                 String success = "Félicitations! Inscription réussie de " + firstName + " au cours " + courseCode + ".";
                 objectOutputStream.writeObject(success);
