@@ -23,9 +23,9 @@ public class Client {
 
         Socket clientSocket = createSocket();
         cmd = Server.LOAD_COMMAND;
+        String semester = null;
 
         while (true) {
-            String semester = null;
 
             switch (cmd){
                 case Server.LOAD_COMMAND:
@@ -39,7 +39,7 @@ public class Client {
 
                 case Server.REGISTER_COMMAND:
                     objOs.writeObject(cmd);
-                    objOs.writeObject(registrationMenu());
+                    objOs.writeObject(registrationMenu(semester));
                     objOs.flush();
                     System.out.println((String) objIs.readObject());
                     break;
@@ -96,7 +96,7 @@ public class Client {
         }
     }
 
-    public static RegistrationForm registrationMenu() throws IOException {
+    public static RegistrationForm registrationMenu(String semester) throws IOException {
         scanner.nextLine();
 
         System.out.print("Veuillez saisir votre prénom: ");
@@ -113,7 +113,7 @@ public class Client {
 
         System.out.print("Veuillez saisir le code du cours: ");
         String code = scanner.nextLine();
-        Course course = new Course(null, code, null);
+        Course course = new Course(null, code, semester);
 
         RegistrationForm inscriptionForm = new RegistrationForm(prenom, nom, email, matricule, course);
         System.out.println(inscriptionForm);
