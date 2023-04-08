@@ -30,17 +30,32 @@ public class Vue extends Application {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 100, 100, Color.BEIGE);
 
-        // Creating empty text fields
+        // Creating registration form
+        GridPane registrationForm = new GridPane();
+        registrationForm.setAlignment(Pos.CENTER);
+        registrationForm.setHgap(10);
+        registrationForm.setVgap(10);
+        registrationForm.setPadding(new Insets(25, 25, 25, 25));
+
         TextField textFieldP = new TextField();
         TextField textFieldN = new TextField();
         TextField textFieldE = new TextField();
         TextField textFieldM = new TextField();
 
-        // Creating labels
         Label labelP = new Label("Prénom");
         Label labelN = new Label("Nom");
         Label labelE = new Label("Email");
         Label labelM = new Label("Matricule");
+
+        registrationForm.add(new Text("Formulaire d'inscription"), 0, 0);
+        registrationForm.add(labelP, 0, 1);
+        registrationForm.add(textFieldP, 1, 1);
+        registrationForm.add(labelN, 0, 2);
+        registrationForm.add(textFieldN, 1, 2);
+        registrationForm.add(labelE, 0, 3);
+        registrationForm.add(textFieldE, 1, 3);
+        registrationForm.add(labelM, 0, 4);
+        registrationForm.add(textFieldM, 1, 4);
 
         // Creating buttons
         Button charger = new Button("charger");
@@ -57,35 +72,40 @@ public class Vue extends Application {
         sepVertical.setOrientation(Orientation.VERTICAL);
 
         // Creating table
-        TableView<Course> tableView = new TableView<>();
-
-        // Creating dropdown list
-        ComboBox<String> dropDown = new ComboBox<>();
-
-        // Liste des cours
-        leftVertical.getChildren().add(0, new Text("Liste des cours"));
+        TableView<Course> courseTable = new TableView<>();
 
         TableColumn<Course, String> codeColumn = new TableColumn<>("Code");
         codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
 
-        TableColumn<Course, String> nameColumn = new TableColumn<>("Cours");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Course, String> courseColumn = new TableColumn<>("Cours");
+        courseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        tableView.getColumns().addAll(codeColumn, nameColumn);
+        courseTable.getColumns().addAll(courseColumn, codeColumn);
 
 
-        root.getChildren().add(sepHorizontal);
-        dropDown.getItems().addAll(
+        // Creating dropdown list
+        ComboBox<String> sessionList = new ComboBox<>();
+        sessionList.getItems().addAll(
                 "Hiver",
                 "Automne",
                 "Été"
         );
-        leftVertical.getChildren().add(charger);
+
+        // Liste des cours
+        leftVertical.getChildren().add(0, new Text("Liste des cours"));
+        leftVertical.getChildren().add(courseTable);
+        leftVertical.getChildren().add(sepHorizontal);
+        leftVertical.getChildren().add(leftHorizontal);
+        leftHorizontal.getChildren().add(0, sessionList);
+        leftHorizontal.getChildren().add(charger);
 
         // Formulaire d'inscription
-        rightVertical.getChildren().add(0, new Text("Formulaire d'inscription"));
-        rightVertical.getChildren().addAll(labelP, textFieldP, labelN, textFieldN, labelE, textFieldE, labelM, textFieldM);
+        rightVertical.getChildren().add(0, registrationForm);
         rightVertical.getChildren().add(envoyer);
+
+        // Dividing the screen
+        SplitPane splitPane = new SplitPane();
+        splitPane.getItems().addAll(leftVertical, rightVertical);
 
         primaryStage.setTitle("Inscription UdeM");
         primaryStage.setScene(scene);
