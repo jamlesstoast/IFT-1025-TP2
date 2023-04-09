@@ -14,11 +14,38 @@ import javafx.stage.Stage;
 import javafx.scene.paint.Color;
 import javafx.geometry.Insets;
 
+/*
+ * The Vue class is a JavaFX application that creates a graphical user interface for
+ * an inscription system for "Université de Montréal"
+ * It displays a registration form on the right side of the screen and list of
+ * available courses on the left of the screen.
+ * The Vue class extends the Application class from the JavaFX library and overrides
+ * its start method to set up the GUI.
+ */
+
 public class Vue extends Application {
+
+    /*
+     * The main method of the Vue class is a static methode that takes an array of
+     * strings as it argument and calls the launch method from the Application class
+     * to start the JavaFX application
+     *
+     * @param   args          the command line argument
+     */
 
     public static void main(String[] args) {
         launch(args);
     }
+
+    /*
+     * The start method of the Vue class is called by the JavaFX framework when
+     * the application is started. It creates a Stage object and sets up the GUI by
+     * creating and arranging various JavaFX UI components using different JavaFX
+     * layout classes.
+     *
+     * @param   primaryStage   the primary stage for the application, where the scene
+     *                         is set
+     */
 
     @Override
     public void start(Stage primaryStage) {
