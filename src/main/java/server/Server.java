@@ -95,24 +95,28 @@ public class Server {
      @param arg la session pour laquelle on veut récupérer la liste des cours
      */
     public void handleLoadCourses(String arg) {
+        courses = new ArrayList<>();
         try{
             BufferedReader reader = new BufferedReader(new FileReader("src/main/java/server/data/cours.txt"));
             String line = reader.readLine();
+
             while (line != null) {
                 String[] course = line.split("\t");
+                Arrays.toString(course);
                 /* course[0] == course code
                    course[1] == course name
                    course[2] == semester
                  */
 
                 if ( course[2].equals(arg) ){
-                    Course selectedCourse = new Course(course[0], course[1], course[2]);
+                    Course selectedCourse = new Course(course[1], course[0], course[2]);
                     courses.add(selectedCourse);
                 }
 
                 line = reader.readLine();
             }
 
+            System.out.println(courses);
             objectOutputStream.writeObject(courses);
             reader.close();
         } catch (IOException e){
@@ -126,7 +130,7 @@ public class Server {
      La méthode gére les exceptions si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-
+        System.out.println("handleRegistration()");
         try {
             RegistrationForm rf = (RegistrationForm) objectInputStream.readObject();
             Course course = rf.getCourse();
@@ -136,29 +140,29 @@ public class Server {
             boolean validCourse = false;
 
             for (Course c: courses) {
-            if (c.equals(course)){
+
+                if (c.getCode().equals(courseCode)) {
                     validCourse = true;
                 }
             }
 
             if (validCourse) {
-                BufferedWriter writer = new BufferedWriter(new FileWriter("./data/inscription.txt"));
+                FileWriter fw = new FileWriter("src/main/java/server/data/inscription.txt", true);
 
-                String s = course.getSession() + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName +
-                        TAB + rf.getNom() + TAB + rf.getEmail();;
+                fw.write(course.getSession() + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName +
+                        TAB + rf.getNom() + TAB + rf.getEmail());
 
-                writer.append(s);
-                writer.close();
+                fw.close();
 
-                String success = "Félicitations! Inscription réussie de " + firstName + " au cours " +
-                        courseCode + ".";
+                String success = "Félicitations! Inscription réussie de " + firstName + " au cours " + courseCode + ".";
                 objectOutputStream.writeObject(success);
             }
             else {
-                String failure = "Échec! Inscription échoué de " + firstName + " au cours " +
-                        courseCode + ".";
+                String failure = "Échec! Inscription échoué de " + firstName + " au cours " + courseCode + ".";
                 objectOutputStream.writeObject(failure);
             }
+
+            objectOutputStream.flush();
         } catch (Exception e){
             e.printStackTrace();
         }

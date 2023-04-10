@@ -1,46 +1,54 @@
 package client;
 
-import server.models.RegistrationForm;
-
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import server.*;
+import server.models.*;
+
 
 public class Client {
-    public static void main(String[] args) throws IOException {
 
-        ObjectOutputStream objOs;
-        ObjectInputStream objIs;
+    private final static String LOCALHOST = "127.0.0.1";
+    private static ObjectOutputStream objOs;
+    private static ObjectInputStream objIs;
+    private static Scanner scanner = new Scanner(System.in);
+    private static String cmd;
 
-        // Obtenir le stream d'input (données reçues du serveur)
-        // clientSocket.getInputStream();
-        // Obtenir le stream d'output (pour envoyer des données au serveur)
-        // clientSocket.getOutputStream();
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        System.out.println("*** Bienvenue au portail d'inscription de cours de l'UDEM ***");
 
-        System.out.println("*** Bienvenue au portail d'inscription de cours de l'UDEM ***\n");
-        String semester = semesterMenu();
+        Socket clientSocket = createSocket();
+        cmd = Server.LOAD_COMMAND;
+        String semester = null;
 
         while (true) {
-            Socket clientSocket = new Socket();
-            objOs = new ObjectOutputStream(clientSocket.getOutputStream());
-            objIs = new ObjectInputStream(clientSocket.getInputStream());
 
-            Scanner scanner = new Scanner(System.in);
+            switch (cmd){
+                case Server.LOAD_COMMAND:
+                    semester = semesterMenu();
+                    objOs.writeObject(cmd + " " + semester);
+                    objOs.flush();
+                    courseMenu(semester);
+                    commandMenu();
+                    clientSocket = createSocket();
+                    break;
 
-            objOs.writeString(semester);
-            objOs.flush();
-
-            courseMenu(semester);
-            commandMenu();
+                case Server.REGISTER_COMMAND:
+                    objOs.writeObject(cmd);
+                    objOs.writeObject(registrationMenu(semester));
+                    objOs.flush();
+                    System.out.println((String) objIs.readObject());
+                    break;
+            }
         }
     }
 
-    public static String semesterMenu(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste des cours:\n" +
+    public static String semesterMenu() throws IOException {
+        System.out.print("Veuillez choisir la session pour laquelle vous voulez consulter la liste des cours:\n" +
                 "1. Automne\n" +
                 "2. Hiver\n" +
                 "3. Ete\n" +
@@ -50,66 +58,72 @@ public class Client {
         String semester = null;
 
         switch (choice) {
-            case 1: semester = "Automne";
-            case 2: semester = "Hiver";
-            case 3: semester = "Ete";
+            case 1:
+                semester = "Automne";
+                break;
+            case 2:
+                semester = "Hiver";
+                break;
+            case 3:
+                semester = "Ete";
+                break;
         }
 
         return semester;
     }
 
-    public void commandMenu() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("1. Consulter les cours offerts pour une autre session\n" +
-                           "2. Inscription à un cours\n" +
-                           "> Choix: ");
+    public static void commandMenu() throws IOException {
+        System.out.print("1. Consulter les cours offerts pour une autre session\n" +
+                        "2. Inscription à un cours\n" +
+                        "> Choix: ");
 
         int choice = scanner.nextInt();
-        switch (choice) {
-            case 1: semesterMenu();
-            case 2: registrationMenu();
+
+        if (choice == 2) {
+            cmd = Server.REGISTER_COMMAND;
         }
     }
 
-    public void courseMenu(String semester){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Les cours offerts pendant la session d'" + semester + "sont: ");
+    public static void courseMenu(String semester) throws IOException, ClassNotFoundException {
+        System.out.println("Les cours offerts pendant la session d'" + semester + " sont: ");
 
-        ArrayList<Course> courses = (List<Course>) objIs.readObject();
+        ArrayList<Course> courses = (ArrayList<Course>) objIs.readObject();
+        int i = 1;
 
         for (Course course: courses){
-            for (int i = 0; i <= courses.size(); i++)
             System.out.println( i + ". " + course.getCode() + "\t" + course.getName());
+            i++;
         }
-
-        System.out.println("> Choix: ");
     }
 
-    public void registrationMenu(){
+    public static RegistrationForm registrationMenu(String semester) throws IOException {
+        scanner.nextLine();
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Veuillez saisir votre prénom: ");
-        System.out.println("Veuillez saisir votre nom: ");
-        System.out.println("Veuillez saisir votre email: ");
-        System.out.println("Veuillez saisir votre matricule: ");
-        System.out.println("Veuillez saisir le code du cours: ");
-
+        System.out.print("Veuillez saisir votre prénom: ");
         String prenom = scanner.nextLine();
+
+        System.out.print("Veuillez saisir votre nom: ");
         String nom = scanner.nextLine();
+
+        System.out.print("Veuillez saisir votre email: ");
         String email = scanner.nextLine();
+
+        System.out.print("Veuillez saisir votre matricule: ");
         String matricule = scanner.nextLine();
+
+        System.out.print("Veuillez saisir le code du cours: ");
         String code = scanner.nextLine();
+        Course course = new Course(null, code, semester);
 
-        // how to create Course ;w;
-        Course course = new Course();
+        RegistrationForm inscriptionForm = new RegistrationForm(prenom, nom, email, matricule, course);
 
-        RegistrationForm rf = new RegistrationForm(prenom, nom, email, matricule, course);
-        objOs.writeObject(rf);
-        objOs.flush();
+        return inscriptionForm;
     }
 
-    public Socket newSocket() throws IOException {
-        Socket clientSocket = new Socket("127.0.0.1", 80);
+    public static Socket createSocket() throws IOException {
+        Socket clientSocket = new Socket(LOCALHOST, ServerLauncher.PORT);
+        objOs = new ObjectOutputStream(clientSocket.getOutputStream());
+        objIs = new ObjectInputStream(clientSocket.getInputStream());
         return clientSocket;
     }
 }
