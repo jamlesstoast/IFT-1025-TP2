@@ -32,7 +32,7 @@ public class Client {
                     semester = semesterMenu();
                     objOs.writeObject(cmd + " " + semester);
                     objOs.flush();
-                    courseMenu(semester);
+                    ArrayList<Course> courses = new ArrayList(courseMenu(semester));
                     commandMenu();
                     clientSocket = createSocket();
                     break;
@@ -94,7 +94,7 @@ public class Client {
         }
     }
 
-    public static void courseMenu(String semester) throws IOException, ClassNotFoundException {
+    public static ArrayList<Course> courseMenu(String semester) throws IOException, ClassNotFoundException {
         System.out.println("Les cours offerts pendant la session d'" + semester + " sont: ");
 
         ArrayList<Course> courses = (ArrayList<Course>) objIs.readObject();
@@ -104,6 +104,8 @@ public class Client {
             System.out.println( i + ". " + course.getCode() + "\t" + course.getName());
             i++;
         }
+
+        return courses;
     }
 
     public static RegistrationForm registrationMenu(String semester) throws IOException {
