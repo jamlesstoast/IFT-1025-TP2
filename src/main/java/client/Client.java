@@ -48,14 +48,14 @@ public class Client {
     }
 
     public static String semesterMenu() throws IOException {
-        System.out.print("Veuillez choisir la session pour laquelle vous voulez consulter la liste des cours:\n" +
+        String semester = null;
+
+        int choice = choiceValidation(
+                "Veuillez choisir la session pour laquelle vous voulez consulter la liste des cours:\n" +
                 "1. Automne\n" +
                 "2. Hiver\n" +
                 "3. Ete\n" +
                 "> Choix: ");
-
-        int choice = scanner.nextInt();
-        String semester = null;
 
         switch (choice) {
             case 1:
@@ -67,20 +67,30 @@ public class Client {
             case 3:
                 semester = "Ete";
                 break;
+            default: {
+                System.out.println("Choix invalide");
+                semesterMenu();
+            }
         }
 
         return semester;
     }
 
     public static void commandMenu() throws IOException {
-        System.out.print("1. Consulter les cours offerts pour une autre session\n" +
+        int choice = choiceValidation("\n1. Consulter les cours offerts pour une autre session\n" +
                         "2. Inscription à un cours\n" +
                         "> Choix: ");
-
-        int choice = scanner.nextInt();
-
-        if (choice == 2) {
-            cmd = Server.REGISTER_COMMAND;
+        switch (choice) {
+            case 1:
+                cmd = Server.LOAD_COMMAND;
+                break;
+            case 2:
+                cmd = Server.REGISTER_COMMAND;
+                break;
+            default: {
+                System.out.println("Choix invalide");
+                commandMenu();
+            }
         }
     }
 
@@ -97,25 +107,59 @@ public class Client {
     }
 
     public static RegistrationForm registrationMenu(String semester) throws IOException {
-        scanner.nextLine();
+        boolean validate = true;
+        ArrayList<String> errors = new ArrayList<>();
+        RegistrationForm inscriptionForm = null;
 
-        System.out.print("Veuillez saisir votre prénom: ");
-        String prenom = scanner.nextLine();
+        while (validate) {
+            System.out.print("Veuillez saisir votre prénom: ");
+            String prenom = scanner.nextLine();
 
-        System.out.print("Veuillez saisir votre nom: ");
-        String nom = scanner.nextLine();
+            System.out.print("Veuillez saisir votre nom: ");
+            String nom = scanner.nextLine();
 
-        System.out.print("Veuillez saisir votre email: ");
-        String email = scanner.nextLine();
+            System.out.print("Veuillez saisir votre email: ");
+            String email = scanner.nextLine();
 
-        System.out.print("Veuillez saisir votre matricule: ");
-        String matricule = scanner.nextLine();
+            System.out.print("Veuillez saisir votre matricule: ");
+            String matricule = scanner.nextLine();
 
-        System.out.print("Veuillez saisir le code du cours: ");
-        String code = scanner.nextLine();
-        Course course = new Course(null, code, semester);
+            System.out.print("Veuillez saisir le code du cours: ");
+            String code = scanner.nextLine();
+            Course course = new Course(null, code, semester);
 
-        RegistrationForm inscriptionForm = new RegistrationForm(prenom, nom, email, matricule, course);
+            if (prenom.equals("")) {
+                errors.add("Prenom est invalide");
+                System.out.println(prenom);
+            }
+            if (nom.equals("")) {
+                errors.add("Nom est invalide");
+                System.out.println(nom);
+            }
+            if (!email.matches("(.+)@(.+)")) {
+                errors.add("Email est invalide");
+                System.out.println(email);
+            }
+            if (!matricule.matches("([0-9]{8})")) {
+                errors.add("Matricule est invalide");
+                System.out.println(matricule);
+            }
+            if (!code.matches("[A-Z]{3}[0-9]{4}")) {
+                errors.add("Code du cours est invalide");
+                System.out.println(code);
+            }
+
+            if (errors.isEmpty()) {
+                inscriptionForm = new RegistrationForm(prenom, nom, email, matricule, course);
+                validate = false;
+            }
+            else {
+                for (String e : errors){
+                    System.out.println(e);
+                }
+                errors.clear();
+            }
+        }
 
         return inscriptionForm;
     }
@@ -125,5 +169,21 @@ public class Client {
         objOs = new ObjectOutputStream(clientSocket.getOutputStream());
         objIs = new ObjectInputStream(clientSocket.getInputStream());
         return clientSocket;
+    }
+
+    public static int choiceValidation(String msg){
+        int choice = 0;
+        do {
+            try {
+                System.out.print(msg);
+                choice = Integer.parseInt(scanner.nextLine());
+
+            } catch (NumberFormatException nfe) {
+                System.out.println("Choix invalide");
+                choice = -1;
+            }
+        } while (choice == -1);
+
+        return choice;
     }
 }
