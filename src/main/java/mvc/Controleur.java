@@ -1,4 +1,4 @@
-package server.mvc;
+package mvc;
 
 public class Controleur {
 }

@@ -1,18 +1,16 @@
-package server.mvc;
-import server.models.Course;
+package mvc;
 
 import javafx.application.Application;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
+import javafx.scene.text.*;
 import javafx.scene.paint.Color;
-import javafx.geometry.Insets;
+import javafx.stage.Stage;
+
+import server.models.Course;
 
 /*
  * The Vue class is a JavaFX application that creates a graphical user interface for
@@ -142,9 +140,9 @@ public class Vue extends Application {
         SplitPane splitPane = new SplitPane();
         splitPane.getItems().addAll(leftVertical, sepVertical, rightVertical);
 
+        // example add panel to main panel : root.getChildren().add(registrationForm);
         primaryStage.setTitle("Inscription UdeM");
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 }
