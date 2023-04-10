@@ -27,7 +27,6 @@ public class Server {
         this.server = new ServerSocket(port, 1);
         this.handlers = new ArrayList<EventHandler>();
         this.addEventHandler(this::handleEvents);
-        this.courses = new ArrayList<>();
     }
 
     public void addEventHandler(EventHandler h) {
@@ -130,12 +129,12 @@ public class Server {
      La méthode gére les exceptions si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-        System.out.println("handleRegistration()");
         try {
             RegistrationForm rf = (RegistrationForm) objectInputStream.readObject();
             Course course = rf.getCourse();
 
             String courseCode = course.getCode();
+            String semester = course.getSession();
             String firstName = rf.getPrenom();
             boolean validCourse = false;
 
@@ -149,8 +148,8 @@ public class Server {
             if (validCourse) {
                 FileWriter fw = new FileWriter("src/main/java/server/data/inscription.txt", true);
 
-                fw.write(course.getSession() + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName +
-                        TAB + rf.getNom() + TAB + rf.getEmail());
+                fw.write(semester + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName + TAB + rf.getNom()
+                        + TAB + rf.getEmail() + "\n");
 
                 fw.close();
 
@@ -158,7 +157,8 @@ public class Server {
                 objectOutputStream.writeObject(success);
             }
             else {
-                String failure = "Échec! Inscription échoué de " + firstName + " au cours " + courseCode + ".";
+                String failure = "Échec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
+                        semester.toLowerCase() + ".";
                 objectOutputStream.writeObject(failure);
             }
 
