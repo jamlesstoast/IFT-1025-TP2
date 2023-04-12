@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.geometry.*;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.scene.paint.Color;
@@ -58,10 +57,10 @@ public class Vue extends Application {
         registrationForm.setPadding(new Insets(25, 25, 25, 25));
 
         // creating textfields
-        TextField textFieldP = new TextField();
-        TextField textFieldN = new TextField();
-        TextField textFieldE = new TextField();
-        TextField textFieldM = new TextField();
+        TextField firstNameField = new TextField();
+        TextField lastNameField = new TextField();
+        TextField emailField = new TextField();
+        TextField matriculeField = new TextField();
 
         // creating labels
         Label labelP = new Label("Prénom");
@@ -72,13 +71,13 @@ public class Vue extends Application {
         // add form fields
         registrationForm.add(new Text("Formulaire d'inscription"), 0, 0);
         registrationForm.add(labelP, 0, 1);
-        registrationForm.add(textFieldP, 1, 1);
+        registrationForm.add(firstNameField, 1, 1);
         registrationForm.add(labelN, 0, 2);
-        registrationForm.add(textFieldN, 1, 2);
+        registrationForm.add(lastNameField, 1, 2);
         registrationForm.add(labelE, 0, 3);
-        registrationForm.add(textFieldE, 1, 3);
+        registrationForm.add(emailField, 1, 3);
         registrationForm.add(labelM, 0, 4);
-        registrationForm.add(textFieldM, 1, 4);
+        registrationForm.add(matriculeField, 1, 4);
 
         // set layout for the form
         registrationForm.setHgap(10);
