@@ -9,15 +9,26 @@ import java.util.Scanner;
 import server.*;
 import server.models.*;
 
-
+/**
+ * Crée des connexions qui sont envoyées au serveur et lui envoie des demandes de commande
+ * @author Julie Yang (20239909)
+ * @author Celina Zhang (20207461)
+ */
 public class Client {
 
-    private final static String LOCALHOST = "127.0.0.1";
-    private static ObjectOutputStream objOs;
-    private static ObjectInputStream objIs;
-    private static Scanner scanner = new Scanner(System.in);
-    private static String cmd;
+    private final static String LOCALHOST = "127.0.0.1";        // Adresse du Localhost
+    private static ObjectOutputStream objOs;                    // Stream d'entrée
+    private static ObjectInputStream objIs;                     // Stream de sortie
+    private static Scanner scanner = new Scanner(System.in);    // Scanner
+    private static String cmd;                                  // La commande à envoyer
 
+    /**
+     * Méthode générale qui initilise le client et le reinitialise tant qu'il y a des
+     * envvoies de commandes
+     * @param args Argument inutilisé
+     * @throws IOException Si une erreur d'entrée/sortie est survenue
+     * @throws ClassNotFoundException Si une erreur de stream d'entrée/sortie est survenue
+     */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         System.out.println("*** Bienvenue au portail d'inscription de cours de l'UDEM ***");
 
@@ -26,13 +37,12 @@ public class Client {
         String semester = null;
 
         while (true) {
-
             switch (cmd){
                 case Server.LOAD_COMMAND:
                     semester = semesterMenu();
                     objOs.writeObject(cmd + " " + semester);
                     objOs.flush();
-                    ArrayList<Course> courses = new ArrayList(courseMenu(semester));
+                    courseMenu(semester);
                     commandMenu();
                     clientSocket = createSocket();
                     break;
@@ -47,6 +57,11 @@ public class Client {
         }
     }
 
+    /**
+     * Saisit le choix de session par l'utilisateur
+     * @return La session à consulter
+     * @throws IOException Si une erreur d'entrée ou de sortie est survenue
+     */
     public static String semesterMenu() throws IOException {
         String semester = null;
 
@@ -76,8 +91,11 @@ public class Client {
         return semester;
     }
 
-    public static void commandMenu() throws IOException {
-        int choice = choiceValidation("\n1. Consulter les cours offerts pour une autre session\n" +
+    /**
+     * Saisit le choix d'action par l'utilisateur
+     */
+    public static void commandMenu() {
+        int choice = choiceValidation("1. Consulter les cours offerts pour une autre session\n" +
                         "2. Inscription à un cours\n" +
                         "> Choix: ");
         switch (choice) {
@@ -94,6 +112,13 @@ public class Client {
         }
     }
 
+    /**
+     * Affiche la liste de cours offerts à une session voulue
+     * @param semester La session désirée par l'utilisateur
+     * @return La liste de cours offert à la session désirée
+     * @throws IOException Si une erreur d'entrée/sortie est survenue lors de la lecture de stream
+     * @throws ClassNotFoundException Si une classe d'un objet sérialisé est corrompu
+     */
     public static ArrayList<Course> courseMenu(String semester) throws IOException, ClassNotFoundException {
         System.out.println("Les cours offerts pendant la session d'" + semester + " sont: ");
 
@@ -105,10 +130,16 @@ public class Client {
             i++;
         }
 
+        System.out.print("\n");
         return courses;
     }
 
-    public static RegistrationForm registrationMenu(String semester) throws IOException {
+    /**
+     * Saisit les informations de l'utilisateur et gère la validation de ces informations
+     * @param semester La session du cours désiré par l'utilisateur
+     * @return Le formulaire rempli validé
+     */
+    public static RegistrationForm registrationMenu(String semester) {
         boolean validate = true;
         ArrayList<String> errors = new ArrayList<>();
         RegistrationForm inscriptionForm = null;
@@ -166,6 +197,11 @@ public class Client {
         return inscriptionForm;
     }
 
+    /**
+     * Crée un socket à l'adresse du Localhost sur le même port que le serveur
+     * @return  Le socket crée
+     * @throws IOException Si une erreur d'entrée/sortie est survenue
+     */
     public static Socket createSocket() throws IOException {
         Socket clientSocket = new Socket(LOCALHOST, ServerLauncher.PORT);
         objOs = new ObjectOutputStream(clientSocket.getOutputStream());
@@ -173,7 +209,12 @@ public class Client {
         return clientSocket;
     }
 
-    public static int choiceValidation(String msg){
+    /**
+     * Validation du type d'entrée de l'utilisateur
+     * @param msg Message à afficher à l'utilisateur
+     * @return Le chiffre saisi par l'utilisateur
+     */
+    public static int choiceValidation(String msg) {
         int choice = 0;
         do {
             try {
