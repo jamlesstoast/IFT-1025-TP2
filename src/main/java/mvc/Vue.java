@@ -105,10 +105,7 @@ public class Vue extends Application {
         TableView<Course> courseTable = new TableView<>();
 
         TableColumn<Course, String> codeColumn = new TableColumn<>("Code");         // column name
-        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));         // display code property of the Course class
-
         TableColumn<Course, String> courseColumn = new TableColumn<>("Cours");      // column name
-        courseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));       // display name property of the Course class
 
         courseTable.getColumns().add(codeColumn);
         courseTable.getColumns().add(courseColumn);
