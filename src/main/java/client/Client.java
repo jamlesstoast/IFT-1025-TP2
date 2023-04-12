@@ -35,8 +35,9 @@ public class Client {
         Socket clientSocket = createSocket();
         cmd = Server.LOAD_COMMAND;
         String semester = null;
+        boolean bool = true;
 
-        while (true) {
+        while (bool) {
             switch (cmd){
                 case Server.LOAD_COMMAND:
                     semester = semesterMenu();
@@ -52,6 +53,7 @@ public class Client {
                     objOs.writeObject(registrationMenu(semester));
                     objOs.flush();
                     System.out.println((String) objIs.readObject());
+                    bool = false;
                     break;
             }
         }
@@ -163,23 +165,18 @@ public class Client {
 
             if (prenom.equals("")) {
                 errors.add("Prenom est invalide");
-                System.out.println(prenom);
             }
             if (nom.equals("")) {
                 errors.add("Nom est invalide");
-                System.out.println(nom);
             }
             if (!email.matches("(.+)@(.+)")) {
                 errors.add("Email est invalide");
-                System.out.println(email);
             }
             if (!matricule.matches("([0-9]{8})")) {
                 errors.add("Matricule est invalide");
-                System.out.println(matricule);
             }
             if (!code.matches("[A-Z]{3}[0-9]{4}")) {
                 errors.add("Code du cours est invalide");
-                System.out.println(code);
             }
 
             if (errors.isEmpty()) {
