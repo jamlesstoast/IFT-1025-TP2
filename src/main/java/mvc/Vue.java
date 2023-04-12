@@ -136,7 +136,6 @@ public class Vue extends Application {
 
         Scene scene = new Scene(root, 100, 100, Color.BEIGE);
 
-        // example add panel to main panel : root.getChildren().add(registrationForm);
         primaryStage.setTitle("Inscription UdeM");
         primaryStage.setScene(scene);
         primaryStage.show();
