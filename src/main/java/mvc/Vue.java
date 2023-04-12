@@ -22,7 +22,6 @@ import server.models.Course;
  */
 
 public class Vue extends Application {
-
     /*
      * The main method of the Vue class is a static methode that takes an array of
      * strings as it argument and calls the launch method from the Application class
@@ -52,8 +51,6 @@ public class Vue extends Application {
         VBox rightVertical = new VBox();
         VBox leftVertical = new VBox();
         HBox leftHorizontal = new HBox();
-        BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 100, 100, Color.BEIGE);
 
         // Creating registration form
         GridPane registrationForm = new GridPane();
@@ -107,13 +104,15 @@ public class Vue extends Application {
         // Creating table
         TableView<Course> courseTable = new TableView<>();
 
-        TableColumn<Course, String> codeColumn = new TableColumn<>("Code");
-        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
+        TableColumn<Course, String> codeColumn = new TableColumn<>("Code");         // column name
+        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));         // display code property of the Course class
 
-        TableColumn<Course, String> courseColumn = new TableColumn<>("Cours");
-        courseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Course, String> courseColumn = new TableColumn<>("Cours");      // column name
+        courseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));       // display name property of the Course class
 
-        courseTable.getColumns().addAll(courseColumn, codeColumn);
+        courseTable.getColumns().add(codeColumn);
+        courseTable.getColumns().add(courseColumn);
+
         courseTable.setPlaceholder(new Label("No content in table"));
 
         // Creating dropdown list
@@ -137,8 +136,10 @@ public class Vue extends Application {
         rightVertical.getChildren().add(envoyer);
 
         // Dividing the screen
-        SplitPane splitPane = new SplitPane();
-        splitPane.getItems().addAll(leftVertical, sepVertical, rightVertical);
+        SplitPane root = new SplitPane();
+        root.getItems().addAll(leftVertical, sepVertical, rightVertical);
+
+        Scene scene = new Scene(root, 100, 100, Color.BEIGE);
 
         // example add panel to main panel : root.getChildren().add(registrationForm);
         primaryStage.setTitle("Inscription UdeM");
