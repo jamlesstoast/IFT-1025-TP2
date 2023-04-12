@@ -105,12 +105,11 @@ public class Vue extends Application {
         TableView<Course> courseTable = new TableView<>();
 
         TableColumn<Course, String> codeColumn = new TableColumn<>("Code");
-        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
-
         TableColumn<Course, String> courseColumn = new TableColumn<>("Cours");
-        courseColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        courseTable.getColumns().addAll(courseColumn, codeColumn);
+        courseTable.getColumns().add(codeColumn);
+        courseTable.getColumns().add(courseColumn);
+
         courseTable.setPlaceholder(new Label("No content in table"));
 
         // Creating dropdown list
