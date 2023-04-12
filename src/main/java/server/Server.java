@@ -11,50 +11,106 @@ import java.util.Arrays;
 import server.models.Course;
 import server.models.RegistrationForm;
 
+/**
+ * Regroupe toutes les methodes liees au serveur qui ecoute les connexions entrantes du
+ * client et traite les demandes de commande du client
+ * @author Julie Yang (20239909)
+ * @author Celina Zhang (20207461)
+ */
 public class Server {
 
+    /**
+     * Nom de la commande d'inscription
+     */
     public final static String REGISTER_COMMAND = "INSCRIRE";
+    /**
+     * Nom de la commande de charge de cours
+     */
     public final static String LOAD_COMMAND = "CHARGER";
+    /**
+     * Caractère de tabulation
+     */
     public final static String TAB = "\t";
+    /**
+     * Socket du serveur
+     */
     private final ServerSocket server;
+    /**
+     * Socket du client
+     */
     private Socket client;
+    /**
+     * Stream d'entree
+     */
     private ObjectInputStream objectInputStream;
+    /**
+     * Stream de sortie
+     */
     private ObjectOutputStream objectOutputStream;
+    /**
+     * Liste de gestionnaires d'evènements
+     */
     private final ArrayList<EventHandler> handlers;
+    /**
+     * Liste des cours disponibles
+     */
     private ArrayList<Course> courses;
 
+    /**
+     * Initialise la liste des gestionnaires d'evenements
+     * @param port Le port sur lequel le server ecoute les connexions entrantes
+     * @throws IOException Si une erreur d'entree ou de sortie est survenue
+     */
     public Server(int port) throws IOException {
         this.server = new ServerSocket(port, 1);
         this.handlers = new ArrayList<EventHandler>();
         this.addEventHandler(this::handleEvents);
     }
 
+    /**
+     * Ajoute un gestionnaire d'evenements à la liste des gestionnaires d'evenements
+     * @param h Le gestionnaire d'evenement à ajouter
+     */
     public void addEventHandler(EventHandler h) {
         this.handlers.add(h);
     }
 
+    /**
+     * Alerte tous les gestionnaires d'evènements d'une nouvelle commande
+     * @param cmd La nouuvelle commande à traiter
+     * @param arg L'argument de la commande
+     */
     private void alertHandlers(String cmd, String arg) {
         for (EventHandler h : this.handlers) {
             h.handle(cmd, arg);
         }
     }
 
+    /**
+     * ecoute continue des connexions entrantes du client et accepte la connexion
+     * Lorsque connecte, initialise les stream d'entrees et de sorties
+     */
     public void run() {
         while (true) {
             try {
                 client = server.accept();
-                System.out.println("Connecté au client: " + client);
+                System.out.println("Connecte au client: " + client);
                 objectInputStream = new ObjectInputStream(client.getInputStream());
                 objectOutputStream = new ObjectOutputStream(client.getOutputStream());
                 listen();
                 disconnect();
-                System.out.println("Client déconnecté!");
+                System.out.println("Client deconnecte!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * ecoute les commandes entrantes du client
+     * @throws IOException Si une erreur de stream d'entree/sortie est survenue
+     * @throws ClassNotFoundException Si la classe d'un objet serialise est invalide
+     */
     public void listen() throws IOException, ClassNotFoundException {
         String line;
         if ((line = this.objectInputStream.readObject().toString()) != null) {
@@ -65,6 +121,11 @@ public class Server {
         }
     }
 
+    /**
+     * Traite la ligne de commande et associe l'argument à la commande
+     * @param line La ligne de commande à traiter
+     * @return Une paire de commande et de son argument
+     */
     public Pair<String, String> processCommandLine(String line) {
         String[] parts = line.split(" ");
         String cmd = parts[0];
@@ -72,12 +133,21 @@ public class Server {
         return new Pair<>(cmd, args);
     }
 
+    /**
+     * Deconnecte le client du serveur
+     * @throws IOException Si une erreur d'entree/sortie survient lors de la fermeture du socket.
+     */
     public void disconnect() throws IOException {
         objectOutputStream.close();
         objectInputStream.close();
         client.close();
     }
 
+    /**
+     * Gère les evenements en fonction de la commande donnee
+     * @param cmd la commande à executer
+     * @param arg l'argument de la commande
+     */
     public void handleEvents(String cmd, String arg) {
         if (cmd.equals(REGISTER_COMMAND)) {
             handleRegistration();
@@ -87,11 +157,8 @@ public class Server {
     }
 
     /**
-     Lire un fichier texte contenant des informations sur les cours et les transformer en liste d'objets 'Course'.
-     La méthode filtre les cours par la session spécifiée en argument.
-     Ensuite, elle renvoie la liste des cours pour une session au client en utilisant l'objet 'objectOutputStream'.
-     La méthode gère les exceptions si une erreur se produit lors de la lecture du fichier ou de l'écriture de l'objet dans le flux.
-     @param arg la session pour laquelle on veut récupérer la liste des cours
+     * Filtre les cours disponibles selon une session donnee
+     * @param arg La session pour laquelle on veut recuperer la liste des cours
      */
     public void handleLoadCourses(String arg) {
         courses = new ArrayList<>();
@@ -124,9 +191,8 @@ public class Server {
     }
 
     /**
-     Récupérer l'objet 'RegistrationForm' envoyé par le client en utilisant 'objectInputStream', l'enregistrer dans un fichier texte
-     et renvoyer un message de confirmation au client.
-     La méthode gére les exceptions si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
+     * Verifie que le cours du formulaire existe pour la session selectionnee
+     * Renvoie l'information du formulaire vers un fichier texte et un message de retroaction au clientS
      */
     public void handleRegistration() {
         try {
@@ -136,10 +202,12 @@ public class Server {
             String courseCode = course.getCode();
             String semester = course.getSession();
             String firstName = rf.getPrenom();
+
             boolean validCourse = false;
+            String msg = "echec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
+                    semester.toLowerCase() + ".";
 
             for (Course c: courses) {
-
                 if (c.getCode().equals(courseCode)) {
                     validCourse = true;
                 }
@@ -150,18 +218,12 @@ public class Server {
 
                 fw.write(semester + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName + TAB + rf.getNom()
                         + TAB + rf.getEmail() + "\n");
-
                 fw.close();
 
-                String success = "Félicitations! Inscription réussie de " + firstName + " au cours " + courseCode + ".";
-                objectOutputStream.writeObject(success);
-            }
-            else {
-                String failure = "Échec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
-                        semester.toLowerCase() + ".";
-                objectOutputStream.writeObject(failure);
+                msg = "Felicitations! Inscription reussie de " + firstName + " au cours " + courseCode + ".";
             }
 
+            objectOutputStream.writeObject(msg);
             objectOutputStream.flush();
         } catch (Exception e){
             e.printStackTrace();
