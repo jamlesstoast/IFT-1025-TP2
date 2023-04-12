@@ -41,17 +41,13 @@ public class Client {
             switch (cmd){
                 case Server.LOAD_COMMAND:
                     semester = semesterMenu();
-                    objOs.writeObject(cmd + " " + semester);
-                    objOs.flush();
                     courseMenu(semester);
                     commandMenu();
                     clientSocket = createSocket();
                     break;
 
                 case Server.REGISTER_COMMAND:
-                    objOs.writeObject(cmd);
-                    objOs.writeObject(registrationMenu(semester));
-                    objOs.flush();
+                    registrationMenu(semester);
                     System.out.println((String) objIs.readObject());
                     bool = false;
                     break;
@@ -89,6 +85,9 @@ public class Client {
                 semesterMenu();
             }
         }
+
+        objOs.writeObject(Server.LOAD_COMMAND + " " + semester);
+        objOs.flush();
 
         return semester;
     }
@@ -139,9 +138,10 @@ public class Client {
     /**
      * Saisit les informations de l'utilisateur et gère la validation de ces informations
      * @param semester La session du cours desire par l'utilisateur
+     * @throws IOException Si une erreur est survenue au stream d'entree/sortie
      * @return Le formulaire rempli valide
      */
-    public static RegistrationForm registrationMenu(String semester) {
+    public static RegistrationForm registrationMenu(String semester) throws IOException {
         boolean validate = true;
         ArrayList<String> errors = new ArrayList<>();
         RegistrationForm inscriptionForm = null;
@@ -190,6 +190,10 @@ public class Client {
                 errors.clear();
             }
         }
+
+        objOs.writeObject(Server.REGISTER_COMMAND);
+        objOs.writeObject(inscriptionForm);
+        objOs.flush();
 
         return inscriptionForm;
     }
