@@ -182,7 +182,6 @@ public class Server {
                 line = reader.readLine();
             }
 
-            System.out.println(courses);
             objectOutputStream.writeObject(courses);
             reader.close();
         } catch (IOException e){
@@ -204,7 +203,7 @@ public class Server {
             String firstName = rf.getPrenom();
 
             boolean validCourse = false;
-            String msg = "echec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
+            String msg = "Echec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
                     semester.toLowerCase() + ".";
 
             for (Course c: courses) {
