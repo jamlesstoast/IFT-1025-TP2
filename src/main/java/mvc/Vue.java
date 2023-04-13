@@ -1,33 +1,28 @@
 package mvc;
 
-import javafx.application.Application;
+import server.models.Course;
+
 import javafx.geometry.*;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
-import server.models.Course;
-
-/**
- Cree une interface graphique pour un système d'inscription
- Elle affiche un formulaire d'inscription et une liste de cours disponibles
- */
 public class Vue extends SplitPane {
-        private TextField firstNameField = new TextField();
-        private TextField lastNameField = new TextField();
-        private TextField emailField = new TextField();
-        private TextField matriculeField = new TextField();
+        private static TextField firstNameField = new TextField();
+        private static TextField lastNameField = new TextField();
+        private static TextField emailField = new TextField();
+        private static TextField matriculeField = new TextField();
         private Button charger = new Button("charger");
         private Button envoyer = new Button("envoyer");
-        private TableView<Course> courseTable = new TableView<>();
-        private TableColumn<Course, String> codeColumn = new TableColumn<>("Code");
-        private TableColumn<Course, String> courseColumn = new TableColumn<>("Cours");
-        private ComboBox<String> sessionList = new ComboBox<>();
+        private static TableView<Course> courseTable = new TableView<>();
+        private static TableColumn<Course, String> codeColumn = new TableColumn<>("Code");
+        private static TableColumn<Course, String> courseColumn = new TableColumn<>("Cours");
+        private static ComboBox<String> sessionList = new ComboBox<>();
 
-
+        /**
+         * Cree une interface graphique pour un système d'inscription.
+         * Elle affiche un formulaire d'inscription et une liste de cours disponibles
+         */
         public Vue() {
 
                 // Setting up the stage
@@ -74,9 +69,12 @@ public class Vue extends SplitPane {
                 courseTable.getColumns().add(codeColumn);
                 courseTable.getColumns().add(courseColumn);
                 courseTable.setPlaceholder(new Label("No content in table"));
+                Label placeholderLabel = (Label) courseTable.getPlaceholder();
+                placeholderLabel.setAlignment(Pos.CENTER);
 
                 // Creating dropdown list
                 sessionList.getItems().addAll("Hiver", "Automne", "Été");
+                sessionList.setValue("Hiver"); // Default value
 
                 // Liste des cours (left)
                 leftVertical.getChildren().add(0, new Text("Liste des cours"));
@@ -93,7 +91,6 @@ public class Vue extends SplitPane {
                 // Dividing the screen
                 SplitPane root = new SplitPane();
                 root.getItems().addAll(leftVertical, sepVertical, rightVertical);
-
     }
         public Button getChargerButton() {
                 return this.charger;
@@ -103,15 +100,22 @@ public class Vue extends SplitPane {
                 return this.envoyer;
         }
 
-        public TableView<Course> getCourseTable() {
+        public static TableView<Course> getCourseTable() {
                 return courseTable;
+        }
+        public static TableColumn<Course, String> getCodeColumn() {
+                return codeColumn;
+        }
+
+        public static TableColumn<Course, String> getCourseColumn() {
+                return courseColumn;
         }
 
         public static String getFirstNameFieldData() {
                 return firstNameField.getText();
         }
 
-        public String getLastNameFieldData() {
+        public static String getLastNameFieldData() {
                 return lastNameField.getText();
         }
 
@@ -121,5 +125,9 @@ public class Vue extends SplitPane {
 
         public static String getMatriculeFieldData() {
                 return matriculeField.getText();
+        }
+
+        public static ComboBox<String> getSessionList() {
+            return sessionList;
         }
 }
