@@ -6,7 +6,6 @@ import server.models.RegistrationForm;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.*;
@@ -53,10 +52,15 @@ public class Controleur {
         });
     }
 
+    /**
+     Charge le code et le nom du cours dans une table selon le semestre sélectionné
+     @throws IOException Si une erreur d'entree/sortie est survenue lors de la lecture de stream
+     @throws ClassNotFoundException Si la classe d'un objet sérialisé est corrompue
+     */
     private void charger() throws IOException, ClassNotFoundException {
         // Button clicked -> Modele is called
-        String semester = sessionList.getValue();
-        List<Course> courses = modele.loadCourses(semester);
+        String selectedSemester = sessionList.getValue();
+        List<Course> courses = modele.loadCourses(selectedSemester);
 
         // Clear existing data from table (if new semester is chosen)
         courseTable.getItems().clear();
@@ -70,17 +74,18 @@ public class Controleur {
     private void envoyer() throws IOException {
         // Button clicked -> Modele is called
         String semester = sessionList.getValue();
-        this.modele.registerStudent(semester);
+        modele.registerStudent();
 
         // Add event handler to courseTable -> course needs to be chosen for registration form to be sent
-        modele.getCourseTable().setOnMouseClicked((MouseEvent event) -> {
-            if (event.getClickCount() == 1) {
-                Course course = modele.getCourseTable().getSelectionModel().getSelectedItem();
-                modele.setSelectedCourse(selectedCourse);
-            }
+        courseTable.setOnMouseClicked(event -> {
+            // Get the selected course from the table view
+            Course selectedCourse = courseTable.getSelectionModel().getSelectedItem();
+            // Set the selected course in the model
+            modele.setSelectedCourse(selectedCourse);
         });
 
-        // Display a success message
+
+        // Display a success message (needs reworking)
         RegistrationForm rf = (RegistrationForm) objectInputStream.readObject();
         Course course = rf.getCourse();
 
