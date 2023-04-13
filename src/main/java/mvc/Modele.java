@@ -67,11 +67,11 @@ public class Modele {
     }
 
     /**
-     Charge une liste de cours pour un semestre donné en utilisant la méthode {@link Client#courseMenu(String)}
+     Charge une liste de cours pour un semestre donne en utilisant la méthode {@link Client#courseMenu(String)}
      @param semester Le semestre pour lequel on veut charger les cours
-     @return Une liste de cours pour le semestre donné
+     @return Une liste de cours pour le semestre donne
      @throws IOException Si une erreur d'entree/sortie est survenue lors de la lecture de stream
-     @throws ClassNotFoundException Si la classe d'un objet sérialisé est corrompue
+     @throws ClassNotFoundException Si la classe d'un objet serialise est corrompue
      */
     public ArrayList<Course> loadCourses(String semester) throws IOException, ClassNotFoundException {
         return Client.courseMenu(semester);
