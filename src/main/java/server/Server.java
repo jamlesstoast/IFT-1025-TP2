@@ -12,8 +12,8 @@ import server.models.Course;
 import server.models.RegistrationForm;
 
 /**
- * Regroupe toutes les methodes liees au serveur qui ecoute les connexions entrantes du
- * client et traite les demandes de commande du client
+ * Regroupe toutes les methodes liees au serveur qui ecoute les connexions entrantes du client et traite les demandes de
+ * commande du client
  * @author Julie Yang (20239909)
  * @author Celina Zhang (20207461)
  */
@@ -87,7 +87,7 @@ public class Server {
     }
 
     /**
-     * ecoute continue des connexions entrantes du client et accepte la connexion
+     * Ecoute continue des connexions entrantes du client et accepte la connexion
      * Lorsque connecte, initialise les stream d'entrees et de sorties
      */
     public void run() {
@@ -107,7 +107,7 @@ public class Server {
     }
 
     /**
-     * ecoute les commandes entrantes du client
+     * Ecoute les commandes entrantes du client
      * @throws IOException Si une erreur de stream d'entree/sortie est survenue
      * @throws ClassNotFoundException Si la classe d'un objet serialise est invalide
      */
@@ -168,7 +168,6 @@ public class Server {
 
             while (line != null) {
                 String[] course = line.split("\t");
-                Arrays.toString(course);
                 /* course[0] == course code
                    course[1] == course name
                    course[2] == semester
@@ -191,7 +190,7 @@ public class Server {
 
     /**
      * Verifie que le cours du formulaire existe pour la session selectionnee
-     * Renvoie l'information du formulaire vers un fichier texte et un message de retroaction au clientS
+     * Renvoie l'information du formulaire vers un fichier texte et un message de retroaction au client
      */
     public void handleRegistration() {
         try {
@@ -203,7 +202,7 @@ public class Server {
             String firstName = rf.getPrenom();
 
             boolean validCourse = false;
-            String msg = "Echec! Le cours " + courseCode + " n'est pas disponible a la session d'" +
+            String msg = "Échec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
                     semester.toLowerCase() + ".";
 
             for (Course c: courses) {
@@ -219,7 +218,7 @@ public class Server {
                         + TAB + rf.getEmail() + "\n");
                 fw.close();
 
-                msg = "Felicitations! Inscription reussie de " + firstName + " au cours " + courseCode + ".";
+                msg = "Félicitations! Inscription réussie de " + firstName + " au cours " + courseCode + ".";
             }
 
             objectOutputStream.writeObject(msg);
