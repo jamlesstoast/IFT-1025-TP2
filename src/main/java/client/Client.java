@@ -141,10 +141,9 @@ public class Client {
      * @throws IOException Si une erreur est survenue au stream d'entree/sortie
      * @return Le formulaire rempli valide
      */
-    public static RegistrationForm registrationMenu(String semester) throws IOException {
+    public static void registrationMenu(String semester) throws IOException {
         boolean validate = true;
         ArrayList<String> errors = new ArrayList<>();
-        RegistrationForm inscriptionForm = null;
 
         while (validate) {
             System.out.print("Veuillez saisir votre prenom: ");
@@ -180,7 +179,7 @@ public class Client {
             }
 
             if (errors.isEmpty()) {
-                inscriptionForm = new RegistrationForm(prenom, nom, email, matricule, course);
+                createForm(prenom, nom, email, matricule, course);
                 validate = false;
             }
             else {
@@ -190,12 +189,26 @@ public class Client {
                 errors.clear();
             }
         }
+    }
+
+    /**
+     * Creer le formulaire d'inscription de l'utilisateur
+     * @param prenom Le prenom de l'utilisateur
+     * @param nom Le nom de l'utilisateur
+     * @param email L'adresse courriel de l'utilisateur
+     * @param matricule La matricule de l'utilisateur
+     * @throws IOException Si une erreur est survenue au stream d'entree/sortie
+     * @return Le formulaire d'inscription
+     */
+    public static RegistrationForm createForm(String prenom, String nom, String email, String matricule, Course course) throws IOException {
+
+        RegistrationForm form = new RegistrationForm(prenom, nom, email, matricule, course);
 
         objOs.writeObject(Server.REGISTER_COMMAND);
-        objOs.writeObject(inscriptionForm);
+        objOs.writeObject(form);
         objOs.flush();
 
-        return inscriptionForm;
+        return form;
     }
 
     /**
