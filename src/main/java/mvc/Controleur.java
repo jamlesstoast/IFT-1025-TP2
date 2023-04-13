@@ -53,9 +53,9 @@ public class Controleur {
     }
 
     /**
-     Charge le code et le nom du cours dans une table selon le semestre sélectionné
+     Charge le code et le nom du cours dans une table selon le semestre selectionne
      @throws IOException Si une erreur d'entree/sortie est survenue lors de la lecture de stream
-     @throws ClassNotFoundException Si la classe d'un objet sérialisé est corrompue
+     @throws ClassNotFoundException Si la classe d'un objet serialise est corrompue
      */
     private void charger() throws IOException, ClassNotFoundException {
         // Button clicked -> Modele is called
