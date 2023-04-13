@@ -28,7 +28,7 @@ public class Server {
      */
     public final static String LOAD_COMMAND = "CHARGER";
     /**
-     * Caractère de tabulation
+     * Caractere de tabulation
      */
     public final static String TAB = "\t";
     /**
@@ -48,7 +48,7 @@ public class Server {
      */
     private ObjectOutputStream objectOutputStream;
     /**
-     * Liste de gestionnaires d'evènements
+     * Liste de gestionnaires d'evenements
      */
     private final ArrayList<EventHandler> handlers;
     /**
@@ -68,16 +68,16 @@ public class Server {
     }
 
     /**
-     * Ajoute un gestionnaire d'evenements à la liste des gestionnaires d'evenements
-     * @param h Le gestionnaire d'evenement à ajouter
+     * Ajoute un gestionnaire d'evenements a la liste des gestionnaires d'evenements
+     * @param h Le gestionnaire d'evenement a ajouter
      */
     public void addEventHandler(EventHandler h) {
         this.handlers.add(h);
     }
 
     /**
-     * Alerte tous les gestionnaires d'evènements d'une nouvelle commande
-     * @param cmd La nouuvelle commande à traiter
+     * Alerte tous les gestionnaires d'evenements d'une nouvelle commande
+     * @param cmd La nouuvelle commande a traiter
      * @param arg L'argument de la commande
      */
     private void alertHandlers(String cmd, String arg) {
@@ -122,8 +122,8 @@ public class Server {
     }
 
     /**
-     * Traite la ligne de commande et associe l'argument à la commande
-     * @param line La ligne de commande à traiter
+     * Traite la ligne de commande et associe l'argument a la commande
+     * @param line La ligne de commande a traiter
      * @return Une paire de commande et de son argument
      */
     public Pair<String, String> processCommandLine(String line) {
@@ -144,8 +144,8 @@ public class Server {
     }
 
     /**
-     * Gère les evenements en fonction de la commande donnee
-     * @param cmd la commande à executer
+     * Gere les evenements en fonction de la commande donnee
+     * @param cmd la commande a executer
      * @param arg l'argument de la commande
      */
     public void handleEvents(String cmd, String arg) {
@@ -203,7 +203,7 @@ public class Server {
             String firstName = rf.getPrenom();
 
             boolean validCourse = false;
-            String msg = "Echec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
+            String msg = "Echec! Le cours " + courseCode + " n'est pas disponible a la session d'" +
                     semester.toLowerCase() + ".";
 
             for (Course c: courses) {
