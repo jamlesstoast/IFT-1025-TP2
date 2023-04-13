@@ -67,7 +67,7 @@ public class Modele {
     }
 
     /**
-     Charge une liste de cours pour un semestre donné en utilisant la méthode {@link Client#courseMenu(String)}.
+     Charge une liste de cours pour un semestre donné en utilisant la méthode {@link Client#courseMenu(String)}
      @param semester Le semestre pour lequel on veut charger les cours
      @return Une liste de cours pour le semestre donné
      @throws IOException Si une erreur d'entree/sortie est survenue lors de la lecture de stream
