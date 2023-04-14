@@ -1,38 +1,32 @@
 package mvc;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.*;
 import javafx.stage.Stage;
+import javafx.scene.paint.Color;
 
 public class Main extends Application {
 
     /**
-     Elle cree un objet Stage et configure l'interface utilisateur graphique
-     @param primaryStage Le stage principal pour l'application, ou la scene est definie
+     * Elle cree un objet Stage et configure l'interface utilisateur graphique
+     * @param primaryStage Le stage principal pour l'application
+     * @throws Exception running app error
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Modele leModele = new Modele();
-        Vue laVue = new Vue();
-        Controleur leControleur = new Controleur(leModele, laVue);
-
-        Scene scene = new Scene(laVue, 100, 100, Color.BEIGE);
-
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mvc/view.fxml"));
+        Parent root = fxmlLoader.load();
         primaryStage.setTitle("Inscription UdeM");
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(root, 600, 400, Color.BEIGE));
         primaryStage.show();
     }
 
     /**
-     Appelle la méthode launch de la classe Application pour démarrer l'application JavaFX
-     @param args les arguments de la ligne de commande
+     * Lance l'application JavaFX
+     * @param args Les arguments de la ligne de commande
      */
     public static void main(String[] args) {
         launch(args);
     }
-
 }
