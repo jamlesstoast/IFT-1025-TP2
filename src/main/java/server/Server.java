@@ -30,7 +30,7 @@ public class Server {
     /**
      * Caractere de tabulation
      */
-    public final static String TAB = "\t";
+    private final static String TAB = "\t";
     /**
      * Socket du serveur
      */
@@ -94,12 +94,12 @@ public class Server {
         while (true) {
             try {
                 client = server.accept();
-                System.out.println("Connecte au client: " + client);
+                System.out.println("Connecté au client: " + client);
                 objectInputStream = new ObjectInputStream(client.getInputStream());
                 objectOutputStream = new ObjectOutputStream(client.getOutputStream());
                 listen();
                 disconnect();
-                System.out.println("Client deconnecte!");
+                System.out.println("Client déconnecté!");
             } catch (Exception e) {
                 e.printStackTrace();
             }
