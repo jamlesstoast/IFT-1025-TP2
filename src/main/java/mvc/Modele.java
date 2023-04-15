@@ -1,7 +1,6 @@
 package mvc;
 
 import client.Client;
-import javafx.scene.control.Alert;
 import server.models.Course;
 
 import java.io.IOException;
@@ -9,7 +8,7 @@ import java.util.*;
 
 public class Modele {
     /**
-     Charge une liste de cours pour un semestre donne en utilisant la méthode {@link Client#loadCourse(String)}
+     Charge une liste de cours pour un semestre donne en utilisant la methode {@link Client#loadCourse(String)}
      @param semester Le semestre pour lequel on veut charger les cours
      @return Une liste de cours pour le semestre donne
      @throws IOException Si une erreur d'entree/sortie est survenue lors de la lecture de stream
@@ -22,7 +21,7 @@ public class Modele {
     /**
      Valide les champs d'un formulaire et renvoie une liste de messages d'erreur
      @param firstName Le prenom entre dans le formulaire
-     @param lastName Le nom entré dans le formulaire
+     @param lastName Le nom entre dans le formulaire
      @param email L'adresse e-mail entree dans le formulaire
      @param matricule Le numero de matricule entre dans le formulaire
      @return Une liste de chaines de caracteres representant les messages d'erreur pour les champs invalides
@@ -49,20 +48,18 @@ public class Modele {
         return errorMessages;
     }
 
-    // Save data to 'inscription.txt' if registration form is valid (part 2)
+    /**
+     Enregistre l'utilisateur avec ses informations dans un formulaire en utilisant
+     la methode {@link Client#createForm(String, String, String, String, Course)}
+     @param firstName Le prenom de l'utilisateur
+     @param lastName Le nom de l'utilisateur
+     @param email L'adresse e-mail de l'utilisateur
+     @param matricule Le matricule de l'utilisateur
+     @param course Le cours choisi par l'utilisateur
+     @throws IOException Si une erreur est survenue au stream d'entree/sortie
+     */
     public void registerStudent(String firstName, String lastName, String email,
                                 String matricule, Course course) throws IOException {
-
-        // Write the student object to a text file
         Client.createForm(firstName, lastName, email, matricule, course);
-
-        // Check that all fields are filled
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || matricule.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("Vous devez remplir tous les champs du formulaire!");
-            alert.showAndWait();
-        }
     }
 }
