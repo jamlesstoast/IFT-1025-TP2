@@ -79,9 +79,12 @@ public class Controleur {
     // NEEDS REWORKING
     @FXML
     private void envoyer() throws IOException {
-
-        String selectedSemester = semester.getValue();
-        modele.registerStudent(firstName, lastName, email, matricule, selectedCourse);
+        // Get form input values
+        String firstName = firstNameTextfield.getText();
+        String lastName = lastNameTextfield.getText();
+        String email = emailTextfield.getText();
+        String matricule = matriculeTextfield.getText();
+        List<String> errorMessages = modele.validateForm(firstName, lastName, email, matricule);
 
         // Set the selection mode of the table to single
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -108,12 +111,14 @@ public class Controleur {
             alert.showAndWait();
         }
 
-        // Get form input values
-        String firstName = firstNameTextfield.getText();
-        String lastName = lastNameTextfield.getText();
-        String email = emailTextfield.getText();
-        String matricule = matriculeTextfield.getText();
-        List<String> errorMessages = modele.validateForm(firstName, lastName, email, matricule);
+        // Check that all fields are filled
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || matricule.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error");
+            alert.setHeaderText("Error");
+            alert.setContentText("Vous devez remplir tous les champs du formulaire!");
+            alert.showAndWait();
+        }
 
         // If registration form is valid and a course is selected from table -> call Modele.registerStudent
         if (errorMessages.isEmpty() && selectedRow != null) {
@@ -138,7 +143,7 @@ public class Controleur {
     }
 
     /**
-     Affiche une alerte avec un message d'erreur donne en paramètre
+     Affiche une alerte avec un message d'erreur donne en parametre
      @param errorMessage le message d'erreur a afficher dans l'alerte
      */
     private void showAlert(String errorMessage) {
