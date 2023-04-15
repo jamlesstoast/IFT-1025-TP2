@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mvc.Controleur">
     <children>
         <VBox alignment="TOP_CENTER" layoutX="16.0" layoutY="10.0" minHeight="400.0" minWidth="300.0" prefHeight="200.0" prefWidth="100.0">
             <children>
@@ -24,10 +24,10 @@
                         <Insets bottom="10.0" />
                     </VBox.margin>
                 </Label>
-                <TableView prefHeight="308.0" prefWidth="280.0">
+                <TableView fx:id="table" prefHeight="308.0" prefWidth="280.0">
                     <columns>
-                        <TableColumn minWidth="90.0" prefWidth="110.39999043941498" text="Code" />
-                        <TableColumn minWidth="136.8000030517578" prefWidth="168.8000030517578" text="Cours" />
+                        <TableColumn fx:id="code" minWidth="90.0" prefWidth="136.5" text="Code" />
+                        <TableColumn fx:id="cours" minWidth="136.8000030517578" prefWidth="143.0" text="Cours" />
                     </columns>
                     <VBox.margin>
                         <Insets bottom="10.0" />
@@ -37,7 +37,7 @@
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                     <children>
                         <ComboBox fx:id="semester" prefWidth="150.0" />
-                        <Button mnemonicParsing="false" text="Charger" />
+                        <Button fx:id="chargerButton" mnemonicParsing="false" onAction="#charger" text="Charger" />
                     </children>
                     <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -62,28 +62,28 @@
                 <HBox alignment="CENTER">
                     <children>
                         <Label prefHeight="18.0" prefWidth="80.0" text="Prénom" />
-                        <TextField />
+                        <TextField fx:id="firstNameTextfield" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="10.0" layoutY="28.0">
                     <children>
                         <Label prefHeight="18.0" prefWidth="80.0" text="Nom" />
-                        <TextField />
+                        <TextField fx:id="lastNameTextfield" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="10.0" layoutY="128.0">
                     <children>
                         <Label prefHeight="18.0" prefWidth="80.0" text="Email" />
-                        <TextField />
+                        <TextField fx:id="emailTextfield" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" layoutX="10.0" layoutY="228.0">
                     <children>
                         <Label prefHeight="18.0" prefWidth="80.0" text="Matricule" />
-                        <TextField />
+                        <TextField fx:id="matriculeTextfield" />
                     </children>
                 </HBox>
-                <Button mnemonicParsing="false" text="Envoyer">
+                <Button fx:id="envoyerButton" mnemonicParsing="false" onAction="#envoyer" text="Envoyer">
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin>
