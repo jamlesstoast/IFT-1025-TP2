@@ -94,7 +94,8 @@ public class Controleur {
         String email = emailTextfield.getText();
         String matricule = matriculeTextfield.getText();
         List<String> errorMessages = modele.validateForm(firstName, lastName, email, matricule);
-        final Course[] selectedCourse = {null}; // Initialize selectedCourse as null
+        //final Course[] selectedCourse = {null}; // Initialize selectedCourse as null
+        Course selectedCourse = new Course(null, null, null);
         String selectedSemester = semester.getValue();
 
         // Set the selection mode to single (can only pick 1 course)
@@ -106,15 +107,13 @@ public class Controleur {
             Course selectedRow = table.getSelectionModel().getSelectedItem();
 
             // Get the value of the code and course fields
-            String selectedCode = selectedRow.getCode();
-            String selectedName = selectedRow.getName();
-
-            // Create a new Course object based on the selected row values
-            selectedCourse[0] = new Course(selectedName, selectedCode, selectedSemester);
+            selectedCourse.setName(selectedRow.getName());
+            selectedCourse.setCode(selectedRow.getCode());
+            selectedCourse.setSession(selectedSemester);
         });
 
         // Check that a course was chosen from table
-        if (selectedCourse[0] == null) {
+        if (selectedCourse.getName() == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("Error");
@@ -132,9 +131,9 @@ public class Controleur {
         }
 
         // If registration form is valid and a course is selected from table -> call Modele.registerStudent
-        if (errorMessages.isEmpty() && selectedCourse[0] != null) {
+        if (errorMessages.isEmpty() && selectedCourse.getName() != null) {
             try {
-                modele.registerStudent(firstName, lastName, email, matricule, selectedCourse[0]);
+                modele.registerStudent(firstName, lastName, email, matricule, selectedCourse);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -143,7 +142,7 @@ public class Controleur {
             alert.setTitle("Message");
             alert.setHeaderText("Message");
             alert.setContentText("Félicitations! " + firstName + " " + lastName +
-                    " est inscrit(e) avec succès pour le cours " + selectedCode + "!");
+                    " est inscrit(e) avec succès pour le cours " + selectedCourse.getCode() + "!");
             alert.showAndWait();
         } else {
             // Display error message
