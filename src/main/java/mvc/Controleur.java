@@ -32,9 +32,13 @@ public class Controleur {
     @FXML
     private TableColumn <Course, String> cours;
 
+    /**
+     * Utilise un modele pour effectuer des operations de traitement de donnees et
+     * pour repondre aux interactions de l'utilisateur
+     * @param modele le modele utilise par le controleur
+     */
     public Controleur(Modele modele) {
         this.modele = modele;
-
 
         chargerButton.setOnAction((action) -> {
             try {
@@ -62,7 +66,7 @@ public class Controleur {
      */
     @FXML
     private void charger() throws IOException, ClassNotFoundException {
-        // semester selected from ComboBox
+        // Load courses for semester selected from ComboBox
         String selectedSemester = semester.getValue();
         List<Course> courses = modele.loadCourses(selectedSemester);
 
@@ -76,7 +80,12 @@ public class Controleur {
         cours.setCellValueFactory(new PropertyValueFactory<>("name"));
     }
 
-    // NEEDS REWORKING
+    /**
+     * Envoie les informations du formulaire d'inscription de l'utilisateur a la classe Modele
+     * pour enregistrer l'utilisateur pour le cours selectionne dans la table
+     * Affiche egalement des messages d'erreur ou de reussite
+     * @throws IOException Si une erreur d'entree/sortie est survenue lors de la lecture de stream
+     */
     @FXML
     private void envoyer() throws IOException {
         // Get form input values
@@ -85,12 +94,11 @@ public class Controleur {
         String email = emailTextfield.getText();
         String matricule = matriculeTextfield.getText();
         List<String> errorMessages = modele.validateForm(firstName, lastName, email, matricule);
+        final Course[] selectedCourse = {null}; // Initialize selectedCourse as null
+        String selectedSemester = semester.getValue();
 
-        // Set the selection mode of the table to single
+        // Set the selection mode to single (can only pick 1 course)
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-        String selectedCode = "";
-        String selectedCourse = "";
 
         // Add event handler to courseTable
         table.setOnMouseClicked(event -> {
@@ -98,12 +106,15 @@ public class Controleur {
             Course selectedRow = table.getSelectionModel().getSelectedItem();
 
             // Get the value of the code and course fields
-            selectedCode = selectedRow.getCode();
-            selectedCourse = selectedRow.getName();
+            String selectedCode = selectedRow.getCode();
+            String selectedName = selectedRow.getName();
+
+            // Create a new Course object based on the selected row values
+            selectedCourse[0] = new Course(selectedName, selectedCode, selectedSemester);
         });
 
         // Check that a course was chosen from table
-        if (selectedCourse == null) {
+        if (selectedCourse[0] == null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Error");
             alert.setHeaderText("Error");
@@ -121,9 +132,9 @@ public class Controleur {
         }
 
         // If registration form is valid and a course is selected from table -> call Modele.registerStudent
-        if (errorMessages.isEmpty() && selectedRow != null) {
+        if (errorMessages.isEmpty() && selectedCourse[0] != null) {
             try {
-                modele.registerStudent(firstName, lastName, email, matricule, selectedCourse);
+                modele.registerStudent(firstName, lastName, email, matricule, selectedCourse[0]);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -143,8 +154,8 @@ public class Controleur {
     }
 
     /**
-     Affiche une alerte avec un message d'erreur donne en parametre
-     @param errorMessage le message d'erreur a afficher dans l'alerte
+     * Affiche une alerte avec un message d'erreur donne en parametre
+     * @param errorMessage le message d'erreur a afficher dans l'alerte
      */
     private void showAlert(String errorMessage) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
