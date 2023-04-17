@@ -44,24 +44,6 @@ public class Controleur {
 
         // Add choices to ComboBox
         semester.getItems().addAll(choices);
-
-        chargerButton.setOnAction((action) -> {
-            try {
-                System.out.println("Bouton 'charger' a été cliqué");      // for testing purposes, we can remove this
-                this.charger();
-            } catch (IOException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        envoyerButton.setOnAction((action) -> {
-            try {
-                System.out.println("Bouton 'envoyer' a été cliqué");      // for testing purposes, we can remove this
-                this.envoyer();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 
     /**
