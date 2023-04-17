@@ -32,6 +32,8 @@ public class Controleur {
     @FXML
     private TableColumn <Course, String> cours;
 
+    private String[] choices = {"Autmone", "Hiver", "Ete"};
+
     /**
      * Utilise un modele pour effectuer des operations de traitement de donnees et
      * pour repondre aux interactions de l'utilisateur
@@ -39,6 +41,9 @@ public class Controleur {
      */
     public Controleur(Modele modele) {
         this.modele = modele;
+
+        // Add choices to ComboBox
+        semester.getItems().addAll(choices);
 
         chargerButton.setOnAction((action) -> {
             try {
@@ -94,7 +99,6 @@ public class Controleur {
         String email = emailTextfield.getText();
         String matricule = matriculeTextfield.getText();
         List<String> errorMessages = modele.validateForm(firstName, lastName, email, matricule);
-        //final Course[] selectedCourse = {null}; // Initialize selectedCourse as null
         Course selectedCourse = new Course(null, null, null);
         String selectedSemester = semester.getValue();
 
@@ -114,20 +118,12 @@ public class Controleur {
 
         // Check that a course was chosen from table
         if (selectedCourse.getName() == null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("Vous devez sélectionner un cours!");
-            alert.showAndWait();
+            errorMessages.add("Vous devez sélectionner un cours!");
         }
 
         // Check that all fields are filled
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || matricule.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Error");
-            alert.setHeaderText("Error");
-            alert.setContentText("Vous devez remplir tous les champs du formulaire!");
-            alert.showAndWait();
+            errorMessages.add("Vous devez remplir tous les champs du formulaire!");
         }
 
         // If registration form is valid and a course is selected from table -> call Modele.registerStudent
@@ -146,22 +142,25 @@ public class Controleur {
             alert.showAndWait();
         } else {
             // Display error message
-            for (String errorMessage : errorMessages) {
-                showAlert(errorMessage);
+            showAlert(errorMessages);
             }
         }
-    }
 
     /**
-     * Affiche une alerte avec un message d'erreur donne en parametre
-     * @param errorMessage le message d'erreur a afficher dans l'alerte
+     * Affiche une alerte avec les messages d'erreurs donnes en parametre
+     * @param errorMessages Une liste de chaines de caracteres representant les messages d'erreur a afficher
      */
-    private void showAlert(String errorMessage) {
+    private void showAlert(List<String> errorMessages) {
+
+        // For messages to be shown one under the other
+        StringBuilder stringBuilder = new StringBuilder();
+        for (String errorMessage : errorMessages) {
+            stringBuilder.append(errorMessage).append("\n");
+        }
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error");
         alert.setHeaderText("Error");
-        alert.setContentText(errorMessage);
-
+        alert.setContentText(stringBuilder.toString());
         alert.showAndWait();
     }
 }
