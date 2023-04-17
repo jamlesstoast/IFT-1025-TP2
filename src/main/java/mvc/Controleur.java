@@ -42,8 +42,10 @@ public class Controleur {
     public Controleur(Modele modele) {
         this.modele = modele;
 
-        // Add choices to ComboBox
+        // Add value to dropdown list
         semester.getItems().addAll(choices);
+        // Default value when program runs
+        semester.setValue("Hiver");
     }
 
     /**
