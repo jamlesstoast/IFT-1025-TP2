@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class Modele {
+
+    private Client client;
+
     /**
      * Charge une liste de cours pour un semestre donne en utilisant la methode {@link Client#loadCourse(String)}
      * @param semester Le semestre pour lequel on veut charger les cours
@@ -15,7 +18,7 @@ public class Modele {
      * @throws ClassNotFoundException Si la classe d'un objet serialise est corrompue
      */
     public ArrayList<Course> loadCourses(String semester) throws IOException, ClassNotFoundException {
-        return Client.loadCourse(semester);
+        return client.loadCourse(semester);
     }
 
     /**
@@ -60,6 +63,6 @@ public class Modele {
      */
     public void registerStudent(String firstName, String lastName, String email,
                                 String matricule, Course course) throws IOException {
-        Client.createForm(firstName, lastName, email, matricule, course);
+        client.createForm(firstName, lastName, email, matricule, course);
     }
 }
