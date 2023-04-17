@@ -32,8 +32,6 @@ public class Controleur {
     @FXML
     private TableColumn <Course, String> cours;
 
-    private String[] choices = {"Autmone", "Hiver", "Ete"};
-
     /**
      * Utilise un modele pour effectuer des operations de traitement de donnees et
      * pour repondre aux interactions de l'utilisateur
@@ -41,9 +39,16 @@ public class Controleur {
      */
     public Controleur(Modele modele) {
         this.modele = modele;
+    }
 
+    /**
+     * Initialise ComboBox avec les choix "Automne", "Hiver" et "Été"
+     */
+    @FXML
+    public void initialize() {
         // Add value to dropdown list
-        semester.getItems().addAll(choices);
+        ObservableList<String> choices = FXCollections.observableArrayList("Automne", "Hiver", "Ete");
+        semester.setItems(choices);
         // Default value when program runs
         semester.setValue("Hiver");
     }
