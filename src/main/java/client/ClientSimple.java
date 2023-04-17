@@ -14,8 +14,8 @@ import server.models.*;
  */
 public class ClientSimple {
     private final Client client;
-    private final static String LOCALHOST = "127.0.0.1";    // Adresse localhost
-    private final static int PORT = 1337;                   // Meme port que serveur
+    public final static String LOCALHOST = "127.0.0.1";    // Adresse localhost
+    public final static int PORT = 1337;                   // Meme port que serveur
     private final static Scanner scanner = new Scanner(System.in);
     private String cmd = Server.LOAD_COMMAND;
 
