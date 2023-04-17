@@ -10,6 +10,10 @@ public class Modele {
 
     private Client client;
 
+    public Modele(Client client) {
+        this.client = client;
+    }
+
     /**
      * Charge une liste de cours pour un semestre donne en utilisant la methode {@link Client#loadCourse(String)}
      * @param semester Le semestre pour lequel on veut charger les cours
