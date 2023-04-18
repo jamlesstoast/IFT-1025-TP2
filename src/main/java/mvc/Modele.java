@@ -36,15 +36,15 @@ public class Modele {
     public List<String> validateForm(String firstName, String lastName, String email, String matricule) {
         List<String> errorMessages = new ArrayList<>();
 
-        if (!firstName.equals("")) {
+        if (!firstName.matches("[A-Za-z][a-z]*")) {
             errorMessages.add("Le champ 'Prénom' est invalide");
         }
 
-        if (!lastName.equals("")) {
+        if (!lastName.matches("[A-Za-z][a-z]*")) {
             errorMessages.add("Le champ 'Nom' est invalide");
         }
 
-        if (!email.matches("(.+)@(.+)")) {
+        if (!email.matches("\\s+@\\s+.\\s+ ")) {
             errorMessages.add("Le champ 'Email' est invalide");
         }
 
