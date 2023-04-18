@@ -44,7 +44,7 @@ public class Modele {
             errorMessages.add("Le champ 'Nom' est invalide");
         }
 
-        if (!email.matches("\\s+@\\s+.\\s+ ")) {
+        if (!email.matches("(.+)@(.+)")) {
             errorMessages.add("Le champ 'Email' est invalide");
         }
 
