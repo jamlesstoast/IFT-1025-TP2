@@ -10,7 +10,7 @@ import javafx.collections.*;
 import javafx.fxml.FXML;
 
 /**
- * Lie l'interface graphique (vue) a sa representation logique (modele)
+ * Fait le lien entre l'interface graphique (vue) et sa representation logique (modele)
  */
 public class Controller {
 
@@ -76,8 +76,6 @@ public class Controller {
 
     /**
      * Construit un objet Controleur
-     * Utilise un modele pour effectuer des operations de traitement de donnees et
-     * pour repondre aux interactions de l'utilisateur
      * @param model le modele utilise par le controleur
      */
     public Controller(Model model) {

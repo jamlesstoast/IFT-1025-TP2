@@ -8,6 +8,9 @@ import javafx.scene.paint.Color;
 
 import client.*;
 
+/**
+ * Methode generale qui lance l'application FX
+ */
 public class Main extends Application {
 
     /**

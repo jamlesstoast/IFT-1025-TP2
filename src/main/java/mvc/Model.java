@@ -18,7 +18,6 @@ public class Model {
 
     /**
      * Construit un objet Model
-     * Utilise le client pour faire des requetes au serveur
      * @param client Le client sur lequel on fait des requetes
      */
     public Model(Client client) {
