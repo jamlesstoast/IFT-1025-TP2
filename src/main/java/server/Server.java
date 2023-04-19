@@ -201,8 +201,11 @@ public class Server {
             String semester = course.getSession();
             String firstName = rf.getPrenom();
 
+            // format course code to AAA-1111
+            String formattedCode = courseCode.substring(0,3) + "-" + courseCode.substring(3);
+
             boolean validCourse = false;
-            String msg = "Échec! Le cours " + courseCode + " n'est pas disponible à la session d'" +
+            String msg = "Échec! Le cours " + formattedCode + " n'est pas disponible à la session d'" +
                     semester.toLowerCase() + ".";
 
             for (Course c: courses) {
@@ -212,13 +215,18 @@ public class Server {
             }
 
             if (validCourse) {
-                FileWriter fw = new FileWriter("src/main/java/server/data/inscription.txt", true);
+                try {
+                    FileWriter fw = new FileWriter("src/main/java/server/data/inscription.txt", true);
 
-                fw.write(semester + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName + TAB + rf.getNom()
-                        + TAB + rf.getEmail() + "\n");
-                fw.close();
+                    fw.write(semester + TAB + courseCode + TAB + rf.getMatricule() + TAB + firstName + TAB + rf.getNom()
+                            + TAB + rf.getEmail() + "\n");
+                    fw.close();
 
-                msg = "Félicitations! Inscription réussie de " + firstName + " au cours " + courseCode + ".";
+                    msg = "Félicitations! " + firstName + " " + rf.getNom() + " est inscrit(e) avec succès pour le cours "
+                            + formattedCode + ".";
+                } catch (FileNotFoundException e) {
+                    System.out.println("Le fichier est introuvable.");
+                }
             }
 
             objectOutputStream.writeObject(msg);
