@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/mvc/view.fxml"));
-        fxmlLoader.setController(new Controleur(new Modele(new Client(ClientSimple.LOCALHOST, ClientSimple.PORT))));
+        fxmlLoader.setController(new Controller(new Model(new Client(ClientSimple.LOCALHOST, ClientSimple.PORT))));
         Parent root = fxmlLoader.load();
         primaryStage.setTitle("Inscription UdeM");
         primaryStage.setScene(new Scene(root, 600, 400, Color.BEIGE));

@@ -9,27 +9,79 @@ import javafx.scene.control.*;
 import javafx.collections.*;
 import javafx.fxml.FXML;
 
-public class Controleur {
-    private Modele modele;
+/**
+ * Lie l'interface graphique (vue) a sa representation logique (modele)
+ */
+public class Controller {
+
+    /**
+     * Le modele de l'interface graphique
+     */
+    private Model model;
+
+    /**
+     * Le cours selectionne
+     */
     private Course selectedCourse;
+
+    /**
+     * Button qui charge la liste de cours desires
+     */
     @FXML private Button chargerButton;
+
+    /**
+     * Button qui envoye un formulaire d'inscription
+     */
     @FXML private Button envoyerButton;
+
+    /**
+     * Le champ de texte pour le prenom
+     */
     @FXML private TextField firstNameTextfield;
+
+    /**
+     * Le champ de texte pour le nom
+     */
     @FXML private TextField lastNameTextfield;
+
+    /**
+     * Le champ de texte pour l'adresse courriel
+     */
     @FXML private TextField emailTextfield;
+
+    /**
+     * Le champ de texte pour le matricule
+     */
     @FXML private TextField matriculeTextfield;
+
+    /**
+     * Menu deroulant des sessions offertes
+     */
     @FXML private ComboBox<String> semester;
+
+    /**
+     * Tableau contenant la liste des cours offerts a une session choisie
+     */
     @FXML private TableView <Course> table;
+
+    /**
+     * Colonne du tableau contenant le code du cours
+     */
     @FXML private TableColumn <Course, String> code;
+
+    /**
+     * Colonne du tableau contenant le nom du cours
+     */
     @FXML private TableColumn <Course, String> cours;
 
     /**
+     * Construit un objet Controleur
      * Utilise un modele pour effectuer des operations de traitement de donnees et
      * pour repondre aux interactions de l'utilisateur
-     * @param modele le modele utilise par le controleur
+     * @param model le modele utilise par le controleur
      */
-    public Controleur(Modele modele) {
-        this.modele = modele;
+    public Controller(Model model) {
+        this.model = model;
     }
 
     /**
@@ -62,7 +114,7 @@ public class Controleur {
     @FXML
     private void charger() throws IOException, ClassNotFoundException {
         String selectedSemester = semester.getValue();
-        List<Course> courses = modele.loadCourses(selectedSemester);
+        List<Course> courses = model.loadCourses(selectedSemester);
 
         table.getItems().clear();
 
@@ -74,7 +126,7 @@ public class Controleur {
 
     /**
      * Envoie les informations de l'inscription a la classe Modele pour enregistrer l'utilisateur au cours selectionne
-     * Affiche des messages d'erreur ou de reussite
+     * Affiche des messages d'erreurs ou de reussite
      */
     @FXML
     private void envoyer() {
@@ -82,7 +134,7 @@ public class Controleur {
         String lastName = lastNameTextfield.getText();
         String email = emailTextfield.getText();
         String matricule = matriculeTextfield.getText();
-        List<String> errorMessages = modele.validateForm(firstName, lastName, email, matricule);
+        List<String> errorMessages = model.validateForm(firstName, lastName, email, matricule);
 
         if (selectedCourse.getName() == null) {
             errorMessages.add("Vous devez sélectionner un cours!");
@@ -94,7 +146,7 @@ public class Controleur {
 
         if (errorMessages.isEmpty() && selectedCourse.getName() != null) {
             try {
-                modele.registerStudent(firstName, lastName, email, matricule, selectedCourse);
+                model.registerStudent(firstName, lastName, email, matricule, selectedCourse);
             } catch (IOException e) {
                 e.printStackTrace();
             }
