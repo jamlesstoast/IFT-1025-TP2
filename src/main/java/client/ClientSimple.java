@@ -135,7 +135,7 @@ public class ClientSimple {
         ArrayList<String> errors = new ArrayList<>();
 
         while (validate) {
-            System.out.print("Veuillez saisir votre prenom: ");
+            System.out.print("Veuillez saisir votre prénom: ");
             String prenom = scanner.nextLine();
 
             System.out.print("Veuillez saisir votre nom: ");
@@ -151,10 +151,10 @@ public class ClientSimple {
             String code = scanner.nextLine();
             Course course = new Course(null, code, semester);
 
-            if (prenom.equals("")) {
-                errors.add("Prenom est invalide");
+            if (prenom.equals("") || !prenom.matches("[A-Za-z][a-z]*")) {
+                errors.add("Prénom est invalide");
             }
-            if (nom.equals("")) {
+            if (nom.equals("") || !nom.matches("[A-Za-z][a-z]*")) {
                 errors.add("Nom est invalide");
             }
             if (!email.matches("(.+)@(.+)")) {
